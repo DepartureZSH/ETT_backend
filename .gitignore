@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+venv/
+env/
+.venv/
+
+# Django/Database
+*.sqlite3
+db.sqlite3
+*.log
+*.pot
+*.mo
+*.po
+*.msg
+*.json
+*.xml
+
+# Editor/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Local settings & secrets
+.env
+local_settings.py
+
+# Media & Static files (if generated locally)
+media/
+static/
+
+# Test reports
+.coverage
+htmlcov/
