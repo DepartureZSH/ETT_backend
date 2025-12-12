@@ -1,0 +1,44 @@
+device: cpu
+seed: 42
+
+data:
+  isthrough: false
+  folder: PathTO/MARL/PSTT/data/instances
+  file: muni-fi-spr17.xml
+
+method:
+  name: RPMAPPO
+  epoch: 50
+  discount: 0.5
+  quickrun: false
+
+config:
+  technique: RPMAPPO
+  author: ZSH
+  institution: UNNC
+  country: China
+  include_students: false
+  report: false
+  output: PathTO/MARL/RPMAPPO/results
+
+train:
+  env_name: RPMAPPO
+  device: 'cuda:0'
+  discount: 0.5 # works when method.name in [CGCS,Random]
+  random_warmup: 200
+  warmup_episode: 250
+  total_episodes: 200
+  steps_clip: 20
+  sched:
+    gamma: 0.95
+    learning_rate: 0.7
+    max_epsilon: 1.0
+    min_epsilon: 0.05
+    decay_rate: 0.01
+  mappo:
+    gamma: 0.99
+    lmbda: 0.97
+    eps: 0.1
+    hidden_dim: 256
+    actor_lr: 1e-4
+    critic_lr: 1e-3
