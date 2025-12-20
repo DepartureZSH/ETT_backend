@@ -6,5 +6,5 @@ def start_training(request):
     start_training_thread()
     return JsonResponse({"status": "started"})
 
-def ui(request):
-    return render(request, 'backend/MARL/test.html')
+# def ui(request):
+#     return render(request, 'backend/MARL/test.html')
