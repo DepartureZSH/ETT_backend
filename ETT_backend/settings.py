@@ -59,7 +59,6 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.openapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.AllowAny', # 或者根据需求配置
         'rest_framework.permissions.IsAuthenticated',

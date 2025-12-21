@@ -8,13 +8,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'email')
+        fields = ('username', 'password')
 
     def create(self, validated_data):
         # 使用 create_user 而不是 create，会自动对密码进行加密存储
         user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data.get('email', ''),
             password=validated_data['password']
         )
         return user

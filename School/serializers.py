@@ -32,6 +32,8 @@ class WeekTableSerializer(serializers.ModelSerializer):
 # --- 核心：课表详情序列化 ---
 class TimetableDetailSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    createDate = serializers.ReadOnlyField(source='created')
+    updateDate = serializers.ReadOnlyField(source='updated')
     TableConfig = serializers.SerializerMethodField()
     DefaultTable = serializers.SerializerMethodField()
     Tables = WeekTableSerializer(many=True, read_only=True)
@@ -43,7 +45,7 @@ class TimetableDetailSerializer(serializers.ModelSerializer):
         # 注意：Timetable 模型里有 index = AutoField(primary_key=True)，所以这里可以用 index
         fields = [
             'index', 'isStar', 'owner', 'usage', 'name', 'type',
-            'description', 'publishDate', 'attachment',
+            'description', 'publishDate', 'createDate', 'updateDate', 'attachment',
             'TableConfig', 'DefaultTable', 'Tables'
         ]
 
@@ -121,3 +123,31 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ['index', 'name', 'description', 'note', 'staff', 'timeslots']
+
+class DistributionSerializer(serializers.ModelSerializer):
+    # read_only=False, queryset 确保可以接收 lesson ID 列表进行写入
+    lessons = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Lesson.objects.all(),
+        source='Lessons', # 指向中间表关联
+        required=False
+    )
+
+    class Meta:
+        model = Distribution
+        fields = ['id', 'type', 'required', 'penalty', 'description', 'note', 'lessons']
+        # id 通常是只读的
+        read_only_fields = ['id']
+
+    def create(self, validated_data):
+        # 提取 lessons 数据
+        lessons_data = validated_data.pop('Lessons', [])
+        # 创建 Distribution 实例
+        distribution = Distribution.objects.create(**validated_data)
+        # 创建中间表关联
+        for lesson in lessons_data:
+            Distribution_constraints_Lesson.objects.create(
+                distribution=distribution,
+                lesson=lesson
+            )
+        return distribution
